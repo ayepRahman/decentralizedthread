@@ -79,7 +79,9 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data: posts }, { status: 200 });
   } catch (error) {
-    console.error("post get error", error);
-    NextResponse.json({ error }, { status: 400 });
+    return NextResponse.json(
+      { error: { message: "Something when wrong!" } },
+      { status: 500 }
+    );
   }
 }
