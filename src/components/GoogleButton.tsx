@@ -9,7 +9,11 @@ type Props = ButtonProps;
 
 export default function GoogleButton({ className, ...props }: Props) {
   const handleOnClick = async () => {
-    signIn("google").catch(console.error);
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (error: any) {
+      console.error("[ERROR]", error);
+    }
   };
 
   return (

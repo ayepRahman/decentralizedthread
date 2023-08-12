@@ -1,5 +1,8 @@
 import { Providers } from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
+
 import { cn } from "@/lib/utils";
+import "@fontsource/roboto"; // Defaults to weight 400.
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -19,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

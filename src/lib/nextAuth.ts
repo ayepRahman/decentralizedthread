@@ -52,8 +52,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt: async ({ token }) => {
-      console.log("JWT", token);
-
       const dbUser = await prisma.user.findFirst({
         where: { email: token.email },
       });
@@ -65,10 +63,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     session: async ({ session, token }) => {
-      console.log("session", {
-        session,
-        token,
-      });
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
@@ -81,6 +75,10 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getAuthSession = () => {
+export const getServerAuthSession = () => {
   return getServerSession(authOptions);
 };
+
+// export const getClientAuthSession = () => {
+//   return getSession();
+// };

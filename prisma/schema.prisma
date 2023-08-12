@@ -1,3 +1,5 @@
+// https://www.prisma.io/docs/concepts/database-connectors/mysql#native-type-mapping-from-prisma-to-mysql
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,20 +10,27 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Account {
-  id                String  @id @default(cuid())
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?  @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId], name: "userId")
@@ -39,10 +48,46 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   name          String?
+  address       String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  posts         Post[]
+  role          Role      @default(USER)
+  Like          Like[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  replies   Post[]   @relation("Thread")
+  parent    Post?    @relation("Thread", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId  String?
+  authorId  String?
+  postId    String?
+  likes     Like[]
+
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([postId])
 }
