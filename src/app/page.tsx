@@ -13,10 +13,10 @@ function Home() {
         <div className="p-4">
           <Link
             href="/"
-            className="flex gap-2 items-center cursor-pointer hover:text-neutral-500 hover:underline"
+            className="flex gap-2 items-center cursor-pointer hover:text-neutral-500 hover:underline transition duration-150 ease-out hover:ease-in"
           >
             <HomeIcon />
-            <span className="font-bold text-xl">Home</span>
+            <span className="font-bold text-md">Dethread</span>
           </Link>
           <PostButton className="w-full mt-4" />
         </div>

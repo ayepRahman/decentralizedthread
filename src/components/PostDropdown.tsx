@@ -6,10 +6,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDeletePost } from "@/hooks/useDeletePost";
 import { useGetAuthSession } from "@/hooks/useGetAuthSession";
 import { cn } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   className?: string;
@@ -19,8 +23,22 @@ type Props = {
 };
 
 export function PostDropdown({ className, post }: Props) {
+  const router = useRouter();
   const { data: session } = useGetAuthSession();
+  const { toast } = useToast();
+  const { mutate: deletePost, isSuccess } = useDeletePost();
   const canDelete = session?.user?.id === post.authorId;
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Success",
+        description: "Post deleted",
+      });
+
+      router.refresh();
+    }
+  }, [isSuccess, router, toast]);
 
   return (
     <DropdownMenu>
@@ -34,7 +52,9 @@ export function PostDropdown({ className, post }: Props) {
           })}
           onClick={() => {
             if (canDelete) {
-              console.log("can delete");
+              deletePost({
+                postId: post.id,
+              });
             }
           }}
         >

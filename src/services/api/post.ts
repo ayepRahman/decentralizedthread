@@ -22,6 +22,12 @@ export const getPosts = async (): Promise<
   return data?.data || [];
 };
 
+export const deletePost = async ({ postId }: { postId: string }) => {
+  return await fetch(`${API_URL}/post/${postId}`, {
+    method: "DELETE",
+  });
+};
+
 export const likePost = async ({ postId }: { postId: string }) => {
   return await fetch(`${API_URL}/post/like`, {
     method: "POST",
