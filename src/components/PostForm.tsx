@@ -1,6 +1,7 @@
 "use client";
 
 import { useCreatePost } from "@/hooks/useCreatePost";
+import { cn } from "@/lib/utils";
 import { PostType } from "@/schema/Post";
 import { PostKeys } from "@/schema/PostKeys";
 import { PostSchema } from "@/schema/PostSchema";
@@ -51,9 +52,13 @@ export function PostForm({ onSuccess }: Props) {
 
         <div className="flex justify-between mt-2">
           {titleError && (
-            <div className=" text-sm text-red-500">{titleError}</div>
+            <div className="text-sm text-red-500">{titleError}</div>
           )}
-          <div className="ml-auto text-sm">
+          <div
+            className={cn("ml-auto text-sm", {
+              "text-red-500": title > POST_MAX_TITLE_LENGTH,
+            })}
+          >
             {title}/{POST_MAX_TITLE_LENGTH}
           </div>
         </div>

@@ -3,20 +3,19 @@
 import { useGetAuthSession } from "@/hooks/useGetAuthSession";
 import { useLikePost } from "@/hooks/useLikePost";
 import { cn } from "@/lib/utils";
-import { Prisma } from "@prisma/client";
+import { PostPayload } from "@/schema/PostPayload";
 import { format } from "date-fns";
-import { DotIcon, Heart, MessageSquare } from "lucide-react";
+import { DotIcon, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { PostDropdown } from "./PostDropdown";
+import { RepliesButton } from "./RepliesButton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card } from "./ui/card";
 import { useToast } from "./ui/use-toast";
 
 type Props = {
-  post: Prisma.PostGetPayload<{
-    include: { author: true; likes: true };
-  }>;
+  post: PostPayload;
 };
 
 export function PostCard({ post }: Props) {
@@ -25,8 +24,9 @@ export function PostCard({ post }: Props) {
   const { data: session } = useGetAuthSession();
   const { mutate: likePost, isSuccess } = useLikePost();
 
-  const likesCount = post.likes.length;
-  const hasUserLikedPost = post.likes.some(
+  const likesCount = post?.likes.length;
+  const repliesCount = post?.replies.length;
+  const hasUserLikedPost = post?.likes.some(
     (like) => like.userId === session?.user?.id
   );
 
@@ -68,10 +68,11 @@ export function PostCard({ post }: Props) {
         <div className="text-sm">{post.title}</div>
         {/* actions */}
         <div className="flex items-center justify-between mt-8 gap-2">
-          <div className="flex items-center">
-            <MessageSquare
-              className={cn("h-4 w-4 cursor-pointer hover:text-cyan-500")}
-            />
+          <div className="flex items-center gap-2 w-8">
+            <RepliesButton post={post} />
+            {repliesCount > 0 && (
+              <span className=" text-sm text-slate-500">{repliesCount}</span>
+            )}
           </div>
           <div className="flex items-center gap-2 w-8">
             <Heart

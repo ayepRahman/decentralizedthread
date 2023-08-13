@@ -34,6 +34,8 @@ export default async function PostsFeed({}: Props) {
 
   const posts = await getPosts();
 
+  console.log("posts", posts);
+
   if (!posts.length) return null;
 
   return (

@@ -58,12 +58,16 @@ export async function GET(req: NextRequest) {
 
     const path = req.nextUrl.searchParams.get("path") || "/";
     const posts = await prisma.post.findMany({
+      where: {
+        parentId: null,
+      },
       orderBy: {
         createdAt: sortBy === "createdAt" ? orderBy : "desc",
       },
       include: {
         author: true,
         likes: true,
+        replies: true,
       },
     });
 

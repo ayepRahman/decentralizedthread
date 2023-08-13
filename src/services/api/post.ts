@@ -1,6 +1,6 @@
 import { API_URL } from "@/constants/base";
 import { PostType } from "@/schema/Post";
-import { Prisma } from "@prisma/client";
+import { PostPayload } from "@/schema/PostPayload";
 
 export const createPost = async (data: PostType) => {
   return await fetch(`${API_URL}/post`, {
@@ -9,11 +9,7 @@ export const createPost = async (data: PostType) => {
   });
 };
 
-export const getPosts = async (): Promise<
-  Prisma.PostGetPayload<{
-    include: { author: true; likes: true };
-  }>[]
-> => {
+export const getPosts = async (): Promise<PostPayload[]> => {
   const res = await fetch(`${API_URL}/post?sortBy=createdAt&orderBy=desc`, {
     method: "GET",
     cache: "no-cache",
@@ -32,5 +28,18 @@ export const likePost = async ({ postId }: { postId: string }) => {
   return await fetch(`${API_URL}/post/like`, {
     method: "POST",
     body: JSON.stringify({ postId }),
+  });
+};
+
+export const replyPost = async ({
+  parentId,
+  title,
+}: {
+  parentId: string;
+  title: string;
+}) => {
+  return await fetch(`${API_URL}/post/reply`, {
+    method: "POST",
+    body: JSON.stringify({ parentId, title }),
   });
 };

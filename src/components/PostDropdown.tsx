@@ -9,7 +9,7 @@ import {
 import { useDeletePost } from "@/hooks/useDeletePost";
 import { useGetAuthSession } from "@/hooks/useGetAuthSession";
 import { cn } from "@/lib/utils";
-import { Prisma } from "@prisma/client";
+import { PostPayload } from "@/schema/PostPayload";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -17,9 +17,7 @@ import { useToast } from "./ui/use-toast";
 
 type Props = {
   className?: string;
-  post: Prisma.PostGetPayload<{
-    include: { author: true; likes: true };
-  }>;
+  post: PostPayload;
 };
 
 export function PostDropdown({ className, post }: Props) {
