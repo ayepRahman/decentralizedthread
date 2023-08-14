@@ -75,9 +75,6 @@ export async function GET(req: NextRequest) {
     //   where: { id: session.user.id },
     //   include: { posts: true },
     // });
-    // console.log("getAuthor", getAuthor);
-
-    // console.log("[server]: post", posts);
 
     revalidatePath(path);
 
